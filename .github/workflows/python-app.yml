@@ -26,8 +26,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: View directory structure
+      run: |
+        echo "Directory structure:"
+        ls -R
+
     - name: Run tests
       env:
-        PYTHONPATH: .  # הוספת תיקיית הפרויקט למשתנה PYTHONPATH
+        PYTHONPATH: .  # Adding the project directory to the PYTHONPATH
       run: |
         pytest

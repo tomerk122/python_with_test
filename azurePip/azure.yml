@@ -1,0 +1,27 @@
+trigger:
+- main  # הרצה אוטומטית ב-branch main
+
+pool:
+  vmImage: ubuntu-latest  # בחרנו את התמונה של Ubuntu
+
+steps:
+# שלב 1: קלונינג של המאגר
+- checkout: self  # מבצע checkout של הקוד שלך
+
+# שלב 2: התקנת פייתון
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'  # התקנת גרסה 3.x של פייתון
+    addToPath: true
+
+# שלב 3: התקנת תלויות
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt  # התקנת כל החבילות הנדרשות
+  displayName: 'Install dependencies'
+
+# שלב 4: הגדרת PYTHONPATH
+- script: |
+    export PYTHONPATH=$PYTHONPATH:$(pwd)  # הוספת תיקיית העבודה ל-PYTHONPATH
+    python -m pytest tests/test_main.py --maxfail=1 --disable-warnings -q  # הרצת הבדיקות
+  displayName: 'Run specific test file with pytest'
